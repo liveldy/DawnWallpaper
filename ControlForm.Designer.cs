@@ -1,4 +1,4 @@
-﻿namespace DawnWallpaper
+namespace DawnWallpaper
 {
     partial class ControlForm
     {
@@ -42,6 +42,7 @@
             uiContextMenuStrip1 = new Sunny.UI.UIContextMenuStrip();
             toolStripMenuItem1 = new ToolStripMenuItem();
             toolStripMenuItem2 = new ToolStripMenuItem();
+            toolStripMenuItem6 = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             toolStripMenuItem5 = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
@@ -173,9 +174,9 @@
             uiContextMenuStrip1.BackColor = Color.FromArgb(243, 249, 255);
             uiContextMenuStrip1.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
             uiContextMenuStrip1.ImageScalingSize = new Size(24, 24);
-            uiContextMenuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1, toolStripMenuItem2, toolStripSeparator1, toolStripMenuItem5, toolStripSeparator2, toolStripMenuItem4, toolStripMenuItem3 });
+            uiContextMenuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1, toolStripMenuItem2, toolStripMenuItem6, toolStripSeparator1, toolStripMenuItem5, toolStripSeparator2, toolStripMenuItem4, toolStripMenuItem3 });
             uiContextMenuStrip1.Name = "uiContextMenuStrip1";
-            uiContextMenuStrip1.Size = new Size(201, 166);
+            uiContextMenuStrip1.Size = new Size(201, 196);
             // 
             // toolStripMenuItem1
             // 
@@ -190,6 +191,13 @@
             toolStripMenuItem2.Size = new Size(200, 30);
             toolStripMenuItem2.Text = "开机自启动";
             toolStripMenuItem2.Click += toolStripMenuItem2_Click;
+            // 
+            // toolStripMenuItem6
+            // 
+            toolStripMenuItem6.Name = "toolStripMenuItem6";
+            toolStripMenuItem6.Size = new Size(200, 30);
+            toolStripMenuItem6.Text = "静默模式";
+            toolStripMenuItem6.Click += toolStripMenuItem6_Click;
             // 
             // toolStripSeparator1
             // 
@@ -224,7 +232,8 @@
             // 
             // notifyIcon1
             // 
-            notifyIcon1.Text = "notifyIcon1";
+            notifyIcon1.Icon = (Icon)resources.GetObject("notifyIcon1.Icon");
+            notifyIcon1.Text = "破晓壁纸";
             notifyIcon1.Visible = true;
             notifyIcon1.Click += notifyIcon1_Click;
             // 
@@ -277,5 +286,6 @@
         private ToolStripMenuItem toolStripMenuItem5;
         private ToolStripSeparator toolStripSeparator2;
         private Sunny.UI.UIButton uiButton3;
+        private ToolStripMenuItem toolStripMenuItem6;
     }
 }
