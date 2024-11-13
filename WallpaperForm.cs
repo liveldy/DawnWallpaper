@@ -1,4 +1,4 @@
-﻿using NAudio.Wave;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,6 +20,8 @@ namespace DawnWallpaper
         private WaveOutEvent? waveOut;
         private AudioFileReader? audioFileReader;
 
+        public event Action<string>? TextChangedEvent;
+
         public WallpaperForm()
         {
             InitializeComponent();
@@ -32,6 +34,7 @@ namespace DawnWallpaper
             axWindowsMediaPlayer1.uiMode = "none";
             axWindowsMediaPlayer1.stretchToFit = true;
             axWindowsMediaPlayer1.settings.setMode("loop", true);
+            axWindowsMediaPlayer1.settings.mute = !ControlForm.bgm;
             if (ControlForm.sound) PlayNextAudio();
         }
 
@@ -58,6 +61,9 @@ namespace DawnWallpaper
 
             waveOut.Init(audioFileReader);
             waveOut.Play();
+
+            string updateAudio = "(" + currentIndex + "/" + audioFiles.Length + ")";
+            TextChangedEvent?.Invoke(updateAudio);
         }
 
         private void WaveOut_PlaybackStopped(object sender, StoppedEventArgs e)
