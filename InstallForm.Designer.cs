@@ -1,4 +1,4 @@
-﻿namespace DawnWallpaper
+namespace DawnWallpaper
 {
     partial class InstallForm
     {
@@ -34,6 +34,7 @@
             uiButton1 = new Sunny.UI.UIButton();
             uiButton2 = new Sunny.UI.UIButton();
             uiProcessBar1 = new Sunny.UI.UIProcessBar();
+            uiLabel1 = new Sunny.UI.UILabel();
             SuspendLayout();
             // 
             // uiListBox1
@@ -62,7 +63,7 @@
             uiTextBox1.Padding = new Padding(5);
             uiTextBox1.ReadOnly = true;
             uiTextBox1.ShowText = false;
-            uiTextBox1.Size = new Size(332, 415);
+            uiTextBox1.Size = new Size(332, 370);
             uiTextBox1.TabIndex = 1;
             uiTextBox1.TextAlignment = ContentAlignment.TopLeft;
             uiTextBox1.Watermark = "";
@@ -103,10 +104,21 @@
             uiProcessBar1.TabIndex = 4;
             uiProcessBar1.Text = "uiProcessBar1";
             // 
-            // Install
+            // uiLabel1
+            // 
+            uiLabel1.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
+            uiLabel1.ForeColor = Color.FromArgb(48, 48, 48);
+            uiLabel1.Location = new Point(445, 424);
+            uiLabel1.Name = "uiLabel1";
+            uiLabel1.Size = new Size(332, 45);
+            uiLabel1.TabIndex = 5;
+            uiLabel1.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // InstallForm
             // 
             AutoScaleMode = AutoScaleMode.None;
             ClientSize = new Size(800, 600);
+            Controls.Add(uiLabel1);
             Controls.Add(uiProcessBar1);
             Controls.Add(uiButton2);
             Controls.Add(uiButton1);
@@ -114,7 +126,7 @@
             Controls.Add(uiListBox1);
             Icon = (Icon)resources.GetObject("$this.Icon");
             MinimumSize = new Size(800, 600);
-            Name = "Install";
+            Name = "InstallForm";
             Padding = new Padding(2, 36, 2, 2);
             Resizable = true;
             ShowDragStretch = true;
@@ -132,5 +144,6 @@
         private Sunny.UI.UIButton uiButton1;
         private Sunny.UI.UIButton uiButton2;
         private Sunny.UI.UIProcessBar uiProcessBar1;
+        private Sunny.UI.UILabel uiLabel1;
     }
 }
