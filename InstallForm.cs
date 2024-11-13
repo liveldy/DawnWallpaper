@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -95,6 +95,7 @@ namespace DawnWallpaper
                 response.EnsureSuccessStatusCode();
 
                 var totalBytes = response.Content.Headers.ContentLength ?? -1L;
+                var startTime = DateTime.Now;
 
                 using (var contentStream = await response.Content.ReadAsStreamAsync())
                 using (var fileStream = new FileStream(destinationPath, FileMode.Create, FileAccess.Write, FileShare.None, 8192, true))
@@ -113,9 +114,18 @@ namespace DawnWallpaper
                             int progressPercentage = (int)((totalRead * 100L) / totalBytes);
                             uiProcessBar1.Value = progressPercentage;
                         }
+
+                        var elapsedTime = DateTime.Now - startTime;
+                        double downloadSpeed = totalRead / elapsedTime.TotalSeconds;
+                        string speedText = $"{(downloadSpeed / 1024 / 1024):F2} MB/s";
+
+                        string downloadedSizeText = $"{totalRead / 1024 / 1024} MB";
+                        string totalSizeText = totalBytes != -1 ? $"{totalBytes / 1024 / 1024} MB" : "Unknown";
+                        uiLabel1.Text = $"{downloadedSizeText}/{totalSizeText}({speedText})";
                     }
                 }
             }
+            uiLabel1.Text = "";
             uiProcessBar1.Value = 0;
             uiButton1.Enabled = true;
         }
@@ -124,8 +134,10 @@ namespace DawnWallpaper
             uiListBox1.Location = new Point(20, 50);
             uiListBox1.Size = new Size(this.Width / 2, this.Height - 70);
             uiTextBox1.Location = new Point(this.Width / 2 + 40, 50);
-            uiTextBox1.Size = new Size(this.Width / 2 - 60, this.Height / 3 * 2);
-            int widthOut = this.Height - 50 - uiTextBox1.Height - 20;
+            uiTextBox1.Size = new Size(this.Width / 2 - 60, this.Height / 5 * 3);
+            uiLabel1.Location = new Point(this.Width / 2 + 40, 50 + this.Height / 5 * 3 + 10);
+            uiLabel1.Size = new Size(this.Width / 2 - 60, this.Height / 3 * 2 - this.Height / 5 * 3 - 10);
+            int widthOut = this.Height - 50 - this.Height / 3 * 2 - 20;
             uiProcessBar1.Location = new Point(this.Width / 2 + 40, 50 + this.Height / 3 * 2 + 20);
             uiProcessBar1.Size = new Size(this.Width / 2 - 60, widthOut / 2 - 30);
             uiButton1.Location = new Point(this.Width / 2 + 40, this.Height / 3 * 2 + 20 + widthOut / 2 + 40);
