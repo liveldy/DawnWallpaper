@@ -30,6 +30,7 @@ namespace DawnWallpaper
         public ControlForm()
         {
             InitializeComponent();
+            InitializeBoot();
         }
 
         //UI更新函数：初始化窗口、调整窗口大小时调用
@@ -179,7 +180,6 @@ namespace DawnWallpaper
 
         private void ControlForm_Load(object sender, EventArgs e)
         {
-            InitializeBoot();
             InitialzeUI();
         }
 
