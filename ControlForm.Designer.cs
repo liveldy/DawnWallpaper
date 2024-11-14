@@ -32,6 +32,7 @@ namespace DawnWallpaper
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ControlForm));
             uiFlowLayoutPanel1 = new Sunny.UI.UIFlowLayoutPanel();
             uiTitlePanel1 = new Sunny.UI.UITitlePanel();
+            uiComboBox1 = new Sunny.UI.UIComboBox();
             uiButton3 = new Sunny.UI.UIButton();
             uiButton2 = new Sunny.UI.UIButton();
             uiCheckBox2 = new Sunny.UI.UICheckBox();
@@ -42,7 +43,6 @@ namespace DawnWallpaper
             uiContextMenuStrip1 = new Sunny.UI.UIContextMenuStrip();
             toolStripMenuItem1 = new ToolStripMenuItem();
             toolStripMenuItem2 = new ToolStripMenuItem();
-            toolStripMenuItem6 = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             toolStripMenuItem5 = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
@@ -70,6 +70,7 @@ namespace DawnWallpaper
             // 
             // uiTitlePanel1
             // 
+            uiTitlePanel1.Controls.Add(uiComboBox1);
             uiTitlePanel1.Controls.Add(uiButton3);
             uiTitlePanel1.Controls.Add(uiButton2);
             uiTitlePanel1.Controls.Add(uiCheckBox2);
@@ -87,6 +88,27 @@ namespace DawnWallpaper
             uiTitlePanel1.TabIndex = 1;
             uiTitlePanel1.Text = "属性";
             uiTitlePanel1.TextAlignment = ContentAlignment.MiddleCenter;
+            // 
+            // uiComboBox1
+            // 
+            uiComboBox1.DataSource = null;
+            uiComboBox1.DropDownStyle = Sunny.UI.UIDropDownStyle.DropDownList;
+            uiComboBox1.FillColor = Color.White;
+            uiComboBox1.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
+            uiComboBox1.ItemHoverColor = Color.FromArgb(155, 200, 255);
+            uiComboBox1.Items.AddRange(new object[] { "主壁纸" });
+            uiComboBox1.ItemSelectForeColor = Color.FromArgb(235, 243, 255);
+            uiComboBox1.Location = new Point(79, 459);
+            uiComboBox1.Margin = new Padding(4, 5, 4, 5);
+            uiComboBox1.MaxDropDownItems = 3;
+            uiComboBox1.MinimumSize = new Size(63, 0);
+            uiComboBox1.Name = "uiComboBox1";
+            uiComboBox1.Padding = new Padding(0, 0, 30, 2);
+            uiComboBox1.Size = new Size(225, 36);
+            uiComboBox1.SymbolSize = 24;
+            uiComboBox1.TabIndex = 7;
+            uiComboBox1.TextAlignment = ContentAlignment.MiddleCenter;
+            uiComboBox1.Watermark = "";
             // 
             // uiButton3
             // 
@@ -117,10 +139,10 @@ namespace DawnWallpaper
             uiCheckBox2.Checked = true;
             uiCheckBox2.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
             uiCheckBox2.ForeColor = Color.FromArgb(48, 48, 48);
-            uiCheckBox2.Location = new Point(50, 525);
+            uiCheckBox2.Location = new Point(123, 562);
             uiCheckBox2.MinimumSize = new Size(1, 1);
             uiCheckBox2.Name = "uiCheckBox2";
-            uiCheckBox2.Size = new Size(290, 44);
+            uiCheckBox2.Size = new Size(152, 44);
             uiCheckBox2.TabIndex = 4;
             uiCheckBox2.Text = "背景音乐";
             // 
@@ -129,10 +151,10 @@ namespace DawnWallpaper
             uiCheckBox1.Checked = true;
             uiCheckBox1.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
             uiCheckBox1.ForeColor = Color.FromArgb(48, 48, 48);
-            uiCheckBox1.Location = new Point(50, 475);
+            uiCheckBox1.Location = new Point(123, 511);
             uiCheckBox1.MinimumSize = new Size(1, 1);
             uiCheckBox1.Name = "uiCheckBox1";
-            uiCheckBox1.Size = new Size(290, 45);
+            uiCheckBox1.Size = new Size(152, 45);
             uiCheckBox1.TabIndex = 3;
             uiCheckBox1.Text = "语音";
             // 
@@ -174,9 +196,9 @@ namespace DawnWallpaper
             uiContextMenuStrip1.BackColor = Color.FromArgb(243, 249, 255);
             uiContextMenuStrip1.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
             uiContextMenuStrip1.ImageScalingSize = new Size(24, 24);
-            uiContextMenuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1, toolStripMenuItem2, toolStripMenuItem6, toolStripSeparator1, toolStripMenuItem5, toolStripSeparator2, toolStripMenuItem4, toolStripMenuItem3 });
+            uiContextMenuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1, toolStripMenuItem2, toolStripSeparator1, toolStripMenuItem5, toolStripSeparator2, toolStripMenuItem4, toolStripMenuItem3 });
             uiContextMenuStrip1.Name = "uiContextMenuStrip1";
-            uiContextMenuStrip1.Size = new Size(201, 196);
+            uiContextMenuStrip1.Size = new Size(201, 166);
             // 
             // toolStripMenuItem1
             // 
@@ -191,13 +213,6 @@ namespace DawnWallpaper
             toolStripMenuItem2.Size = new Size(200, 30);
             toolStripMenuItem2.Text = "开机自启动";
             toolStripMenuItem2.Click += toolStripMenuItem2_Click;
-            // 
-            // toolStripMenuItem6
-            // 
-            toolStripMenuItem6.Name = "toolStripMenuItem6";
-            toolStripMenuItem6.Size = new Size(200, 30);
-            toolStripMenuItem6.Text = "静默模式";
-            toolStripMenuItem6.Click += toolStripMenuItem6_Click;
             // 
             // toolStripSeparator1
             // 
@@ -248,12 +263,11 @@ namespace DawnWallpaper
             ExtendMenu = uiContextMenuStrip1;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
+            MaximumSize = new Size(0, 0);
             MinimizeBox = false;
             MinimumSize = new Size(800, 600);
             Name = "ControlForm";
             Padding = new Padding(2, 50, 2, 2);
-            Resizable = true;
-            ShowDragStretch = true;
             Text = "破晓壁纸";
             TitleHeight = 50;
             ZoomScaleRect = new Rectangle(22, 22, 800, 450);
@@ -286,6 +300,6 @@ namespace DawnWallpaper
         private ToolStripMenuItem toolStripMenuItem5;
         private ToolStripSeparator toolStripSeparator2;
         private Sunny.UI.UIButton uiButton3;
-        private ToolStripMenuItem toolStripMenuItem6;
+        private Sunny.UI.UIComboBox uiComboBox1;
     }
 }
