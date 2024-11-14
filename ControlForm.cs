@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using Sunny.UI;
+using AxWMPLib;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
@@ -11,29 +12,19 @@ namespace DawnWallpaper
 {
     public partial class ControlForm : UIForm
     {
-        
-        /*****公共变量*****/
-        
         //资源目录
         public static string assetsDirectory = Path.Combine(Application.StartupPath, "assets");
         //当前选中壁纸索引
         public static string indexName = "";
         //正在使用壁纸索引
         private string nowPlaying = "";
-        //是否播放语音、背景音乐（仅非静谧模式有效）
+        //是否播放语音、背景音乐
         public static bool sound = true;
         public static bool bgm = true;
-        //是否静谧模式
-        public static bool quietMode = false;
-
-        /*****正常模式窗口*****/
+        //壁纸窗口
         private IntPtr windowsHandle = IntPtr.Zero;
         private WallpaperForm? wallpaperform;
-        private AxWMPLib.AxWindowsMediaPlayer? wallpaperplayer;
-
-        /*****静谧模式窗口*****/
-        private QuietWallpaperForm main;
-        private AxWMPLib.AxWindowsMediaPlayer player;
+        private AxWindowsMediaPlayer? wallpaperplayer;
 
 
         public ControlForm()
@@ -48,6 +39,7 @@ namespace DawnWallpaper
             uiLabel1.Font = font;
             uiCheckBox1.Font = font;
             uiCheckBox2.Font = font;
+            uiComboBox1.Font = font;
             uiButton1.Font = font;
             uiButton2.Font = font;
             uiButton3.Font = font;
@@ -62,6 +54,7 @@ namespace DawnWallpaper
             uiLabel1.Size = new Size(uiTitlePanel1.Width / 8 * 6, pictureBox1.Height / 2);
             uiCheckBox1.Location = new Point(uiTitlePanel1.Width / 4, uiTitlePanel1.Height / 8 + uiTitlePanel1.Width / 8 * 7);
             uiCheckBox2.Location = new Point(uiTitlePanel1.Width / 4, uiTitlePanel1.Height / 8 + uiTitlePanel1.Width / 8 * 7 + 50);
+            uiComboBox1.Location = new Point(uiTitlePanel1.Width / 4, uiTitlePanel1.Height / 8 + uiTitlePanel1.Width / 8 * 7 + 100);
             uiButton1.Location = new Point(uiTitlePanel1.Width / 10, uiTitlePanel1.Height / 10 * 8);
             uiButton1.Size = new Size(uiTitlePanel1.Width / 10 * 8, uiTitlePanel1.Height / 30 * 2);
             uiButton2.Location = new Point(uiTitlePanel1.Width / 10, uiTitlePanel1.Height / 10 * 9);
@@ -94,8 +87,8 @@ namespace DawnWallpaper
             foreach (DirectoryInfo subDirectory in srcPath.GetDirectories())
             {
                 PictureBox header = new PictureBox();
-                header.Height = pictureBox1.Height;
-                header.Width = pictureBox1.Width;
+                header.Height = uiFlowLayoutPanel1.Width / 5 - 7;
+                header.Width = uiFlowLayoutPanel1.Width / 5 - 7;
                 header.SizeMode = PictureBoxSizeMode.StretchImage;
                 header.Name = Path.GetFileName(subDirectory.Name);
                 header.ImageLocation = Path.Combine(subDirectory.FullName, "header.png");
@@ -108,6 +101,8 @@ namespace DawnWallpaper
         private void InitializeBoot()
         {
             if (!Directory.Exists(assetsDirectory)) Directory.CreateDirectory(assetsDirectory);
+            Wallpaper.GETHandleRun(this);
+            uiComboBox1.SelectedIndex = 0;
         }
 
         /*****壁纸加载函数*****/
@@ -116,16 +111,12 @@ namespace DawnWallpaper
         private void wallpaperLoad()
         {
             wallpaperExitNormal();
-            if (quietMode)wallpaperLoadQuiet();
-            else wallpaperLoadNormal();
+            wallpaperLoadNormal();
             nowPlaying = indexName;
             uiButton1.Text = "正在应用";
         }
 
-        //简要说明：正常模式切换壁纸时窗口加载一次退出一次，程序结束也退出；
-        //          静谧模式窗口只有首次加载，切换壁纸只需要切换URL即可，只有程序结束时退出
-       
-        //壁纸加载函数：加载正常模式
+        //壁纸加载函数
         private void wallpaperLoadNormal()
         {
             if (!File.Exists(Path.Combine(assetsDirectory, indexName, "video.mp4"))) return;
@@ -135,13 +126,15 @@ namespace DawnWallpaper
             wallpaperform = new WallpaperForm();
             wallpaperplayer = wallpaperform.axWindowsMediaPlayer1;
             wallpaperplayer.URL = Path.Combine(assetsDirectory, indexName, "video.mp4");
+            wallpaperform.Size = new Size(Screen.PrimaryScreen.Bounds.Width + 1000, Screen.PrimaryScreen.Bounds.Height + 1000);
+            wallpaperCorrect(wallpaperplayer);
             Wallpaper.SetFather(wallpaperform);
             wallpaperform.Show();
             windowsHandle = wallpaperform.Handle;
 
             this.wallpaperform.TextChangedEvent += updateAudio;
         }
-        //壁纸加载函数：退出正常模式
+        //壁纸退出函数
         private void wallpaperExitNormal()
         {
             if (windowsHandle != IntPtr.Zero)
@@ -151,31 +144,24 @@ namespace DawnWallpaper
                 Wallpaper.Refresh();
             }
         }
-        //壁纸加载函数：加载静谧模式
-        private void wallpaperLoadQuiet()
-        {
-            if (main == null)
-            {
-                main = new QuietWallpaperForm();
-                player = main.player;
-                player.URL = Path.Combine(assetsDirectory, indexName, "video.mp4");
-                Wallpaper.SetFather(main);
-                main.Show();
-            }
-            player.URL = Path.Combine(assetsDirectory, indexName, "video.mp4");
-        }
-        //壁纸加载函数：退出静谧模式
-        private void wallpaperExitQuiet()
-        {
-            if (quietMode && main != null)
-            {
-                main.Hide();
-                this.Hide();
-                Wallpaper.Refresh();
-                main.Dispose();
-            }
-        }
 
+        //宽高调整函数
+        private void wallpaperCorrect(AxWindowsMediaPlayer player)
+        {
+            float screenAspectRatio = (float)Screen.PrimaryScreen.Bounds.Width / Screen.PrimaryScreen.Bounds.Height;
+            float videoAspectRatio = 16f / 9f;
+
+            if (screenAspectRatio > videoAspectRatio)
+            {
+                int newHeight = (int)(player.Width / videoAspectRatio);
+                player.Height = newHeight;
+            }
+            else
+            {
+                int newWidth = (int)(player.Height * videoAspectRatio);
+                player.Width = newWidth;
+            }
+        }
         //更新音频进度委托函数
         private void updateAudio(string text)
         {
@@ -241,13 +227,25 @@ namespace DawnWallpaper
         {
             notifyIcon1.Visible = false;
             wallpaperExitNormal();
-            wallpaperExitQuiet();
             Application.ExitThread();
         }
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("破晓壁纸\n作者：哀歌殇年\n版本：V1.0.1.0\nQQ：2690034441\n本软件完全免费，严禁用于商用", "关于");
+            UIMessageBox.Show(@"破晓壁纸
+作者：哀歌殇年
+
+版本：V1.0.2.0
+更新公告：
+1.移除静谧模式
+2.解决屏幕右侧有少量白边的问题
+3.实现对不同宽高比屏幕的铺满拉伸
+4.更新UI刷新机制：左侧图标尽可能占满空间
+5.实现关于窗口+更新公告窗口
+
+QQ：2690034441
+本软件完全免费，严禁用于商用
+            ", "关于");
         }
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
@@ -276,23 +274,5 @@ namespace DawnWallpaper
             InitializeData();
         }
 
-        private void toolStripMenuItem6_Click(object sender, EventArgs e)
-        {
-            if (nowPlaying != "")
-            {
-                UIMessageTip.Show("请在未启用壁纸前选择\n如果已经启用壁纸，可以重启程序");
-                return;
-            }
-            UIMessageTip.Delay = 1000;
-            quietMode = !quietMode;
-            if (quietMode)
-            {
-                UIMessageTip.ShowOk("已开启");
-            }
-            else
-            {
-                UIMessageTip.ShowError("已关闭");
-            }
-        }
     }
 }
