@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO.Compression;
 using System.Linq;
@@ -43,6 +44,7 @@ namespace DawnWallpaper
                             try
                             {
                                 await DownloadFileAsync("https://oss.agsn.site/DawnWallpaper/GETHandle.exe", Path.Combine(Application.StartupPath, "GETHandle.exe"));
+                                Wallpaper.GETHandleRun(this);
                                 uiTextBox1.Text += "\r\n环境初始化成功！";
                             }
                             catch
