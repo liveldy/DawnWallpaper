@@ -1,4 +1,4 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,6 +21,8 @@ namespace DawnWallpaper
         private static extern IntPtr GetClassNameA(IntPtr hWnd, IntPtr lpClassName, int nMaxCount);
         [DllImport("user32.dll", EntryPoint = "GetParent")]
         private static extern IntPtr GetParent(IntPtr hWnd);
+        [DllImport("user32.dll", EntryPoint = "SystemParametersInfo")]
+        public static extern int SystemParametersInfo(int uAction, int uParam, StringBuilder lpvParam, int fuWinIni);
 
         public static void SetFather(Form form)
         {
@@ -32,7 +34,7 @@ namespace DawnWallpaper
             IntPtr background = IntPtr.Zero;
             IntPtr father = FindWindowA("progman", "Program Manager");
             IntPtr workerW = IntPtr.Zero;
-            if (File.Exists(Path.Combine(Application.StartupPath, "GETHandle.exe"))) Process.Start(Path.Combine(Application.StartupPath, "GETHandle.exe"));
+            
             do
             {
                 workerW = FindWindowExA(IntPtr.Zero, workerW, "workerW", null);
@@ -51,10 +53,6 @@ namespace DawnWallpaper
             return (int)background;
             
         }
-
-        [DllImport("user32.dll", EntryPoint = "SystemParametersInfo")]
-        public static extern int SystemParametersInfo(int uAction, int uParam, StringBuilder lpvParam, int fuWinIni);
-
         public static bool Refresh()
         {
             StringBuilder wallpaper = new StringBuilder(200);
@@ -68,6 +66,19 @@ namespace DawnWallpaper
                 return true;
             }
             return false;
+        }
+        public static void GETHandleRun(Form form)
+        {
+            if (File.Exists(Path.Combine(Application.StartupPath, "GETHandle.exe")))
+            {
+                Process GEThandle = new Process();
+                GEThandle.StartInfo.FileName = Path.Combine(Application.StartupPath, "GETHandle.exe");
+                GEThandle.Start();
+                GEThandle.WaitForExit();
+
+                form.TopMost = true;
+                form.TopMost = false;
+            }
         }
     }
 }
