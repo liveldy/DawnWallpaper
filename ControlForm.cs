@@ -16,6 +16,7 @@ namespace DawnWallpaper
         public static string assetsDirectory = Path.Combine(Application.StartupPath, "assets");
         //当前选中壁纸索引
         public static string indexName = "";
+        public static string indexNameVideo = "";
         //正在使用壁纸索引
         private string nowPlaying = "";
         //是否播放语音、背景音乐
@@ -51,8 +52,8 @@ namespace DawnWallpaper
             uiTitlePanel1.Size = new Size(this.Width - (this.Width / 3 * 2 + 40) - 20, this.Height - 70 - 20);
             pictureBox1.Location = new Point(uiTitlePanel1.Width / 4, uiTitlePanel1.Height / 8);
             pictureBox1.Size = new Size(uiTitlePanel1.Width / 4 * 2, uiTitlePanel1.Width / 4 * 2);
-            uiLabel1.Location = new Point(uiTitlePanel1.Width / 8, uiTitlePanel1.Height / 8 + uiTitlePanel1.Width / 8 * 5);
-            uiLabel1.Size = new Size(uiTitlePanel1.Width / 8 * 6, pictureBox1.Height / 2);
+            uiLabel1.Location = new Point(uiTitlePanel1.Width / 16, uiTitlePanel1.Height / 8 + uiTitlePanel1.Width / 8 * 5);
+            uiLabel1.Size = new Size(uiTitlePanel1.Width / 8 * 7, pictureBox1.Height / 2);
             uiCheckBox1.Location = new Point(uiTitlePanel1.Width / 4, uiTitlePanel1.Height / 8 + uiTitlePanel1.Width / 8 * 7);
             uiCheckBox2.Location = new Point(uiTitlePanel1.Width / 4, uiTitlePanel1.Height / 8 + uiTitlePanel1.Width / 8 * 7 + 50);
             uiComboBox1.Location = new Point(uiTitlePanel1.Width / 4, uiTitlePanel1.Height / 8 + uiTitlePanel1.Width / 8 * 7 + 100);
@@ -75,6 +76,23 @@ namespace DawnWallpaper
                 + configini.ReadString("main", "version", "") + "\n"
                 + configini.ReadString("main", "author", "") + "\n"
                 + configini.ReadString("main", "size", "") + "\n";
+
+            uiComboBox1.Items.Clear();
+            string videoDirectory = Path.Combine(assetsDirectory, indexName, "videos");
+            if (Directory.Exists(videoDirectory))
+            {
+                DirectoryInfo srcPath = new DirectoryInfo(videoDirectory);
+                foreach (FileInfo subFile in srcPath.GetFiles())
+                {
+                    uiComboBox1.Items.Add(Path.GetFileName(subFile.Name));
+                    if (indexNameVideo != "") uiComboBox1.SelectedItem = indexNameVideo;
+                }
+            }
+            else
+            {
+                uiComboBox1.Items.Add("主壁纸");
+                uiComboBox1.SelectedItem = "主壁纸";
+            }
 
             if (indexName == nowPlaying) uiButton1.Text = "正在应用";
             else uiButton1.Text = "应用";
@@ -120,13 +138,21 @@ namespace DawnWallpaper
         //壁纸加载函数
         private void wallpaperLoadNormal()
         {
-            if (!File.Exists(Path.Combine(assetsDirectory, indexName, "video.mp4"))) return;
-
+            if (
+                (
+                !File.Exists(Path.Combine(assetsDirectory, indexName, "video.mp4"))
+                && !File.Exists(Path.Combine(assetsDirectory, indexName, "videos", uiComboBox1.SelectedText))
+                )
+                || uiComboBox1.SelectedText == ""
+               ) return;
             sound = uiCheckBox1.Checked;
             bgm = uiCheckBox2.Checked;
             wallpaperform = new WallpaperForm();
             wallpaperplayer = wallpaperform.axWindowsMediaPlayer1;
-            wallpaperplayer.URL = Path.Combine(assetsDirectory, indexName, "video.mp4");
+            if (uiComboBox1.SelectedText != "" && uiComboBox1.SelectedText != "主壁纸")
+                wallpaperplayer.URL = Path.Combine(assetsDirectory, indexName, "videos", uiComboBox1.SelectedText);
+            else
+                wallpaperplayer.URL = Path.Combine(assetsDirectory, indexName, "video.mp4");
             wallpaperform.Size = new Size(Screen.PrimaryScreen.Bounds.Width + 1000, Screen.PrimaryScreen.Bounds.Height + 1000);
             wallpaperCorrect(wallpaperplayer);
             Wallpaper.SetFather(wallpaperform);
@@ -235,13 +261,11 @@ namespace DawnWallpaper
             UIMessageBox.Show(@"破晓壁纸
 作者：哀歌殇年
 
-版本：V1.0.2.0
+版本：V1.0.3.0
 更新公告：
-1.移除静谧模式
-2.解决屏幕右侧有少量白边的问题
-3.实现对不同宽高比屏幕的铺满拉伸
-4.更新UI刷新机制：左侧图标尽可能占满空间
-5.实现关于窗口+更新公告窗口
+1.新增订阅主题，可以配置不同的订阅项目
+2.实现壁纸包多壁纸
+3.更换logo
 
 QQ：2690034441
 本软件完全免费，严禁用于商用
@@ -266,7 +290,7 @@ QQ：2690034441
         private void toolStripMenuItem5_Click(object sender, EventArgs e)
         {
             Form install = new InstallForm();
-            install.Show();
+            install.ShowDialog();
         }
 
         private void ControlForm_Activated(object sender, EventArgs e)
