@@ -19,6 +19,8 @@ namespace DawnWallpaper
 {
     public partial class InstallForm : UIForm
     {
+        private UIEditForm ?configEdit;
+
         public InstallForm()
         {
             InitializeComponent();
@@ -38,7 +40,7 @@ namespace DawnWallpaper
                     if (reply.Status == IPStatus.Success)
                     {
                         uiTextBox1.Text += "\r\n网络连接可用！";
-                        if(!File.Exists(Path.Combine(Application.StartupPath, "GETHandle.exe")))
+                        if (!File.Exists(Path.Combine(Application.StartupPath, "GETHandle.exe")))
                         {
                             uiTextBox1.Text += "\r\n初始化环境...";
                             try
@@ -52,22 +54,36 @@ namespace DawnWallpaper
                                 uiTextBox1.Text += "\r\n环境初始化失败！";
                             }
                         }
-                        uiTextBox1.Text += "\r\n获取下载列表...";
-                        string url = "https://oss.agsn.site/DawnWallpaper/list.ini";
-                        string savePath = Path.Combine(Application.StartupPath, "list.ini");
-                        try
+                        if (!File.Exists(Path.Combine(Application.StartupPath, "SRCConfig.ini")))
                         {
-                            await DownloadFileAsync(url, savePath);
-                            uiTextBox1.Text += "\r\n列表获取成功！";
-                            IniFile listIni = new IniFile(savePath);
-                            foreach (string section in listIni.Sections)
-                            {
-                                uiListBox1.Items.Add(listIni.ReadString(section, "name", ""));
-                            }
+                            uiTextBox1.Text += "\r\n未进行订阅配置！";
+                            return;
                         }
-                        catch
+                        else
                         {
-                            uiTextBox1.Text += "\r\n列表获取失败！";
+                            IniFile SRCConfig = new IniFile(Path.Combine(Application.StartupPath, "SRCConfig.ini"));
+                            string SRCName = SRCConfig.ReadString("main", "SRCName", "");
+                            string SRCUrl = SRCConfig.ReadString("main", "SRCUrl", "");
+                            uiTextBox1.Text += "\r\n读取完成！";
+                            uiTextBox1.Text += "\r\n订阅主题名称：" + SRCName;
+                            uiTextBox1.Text += "\r\n订阅URL：" + SRCUrl;
+                            uiTextBox1.Text += "\r\n获取下载列表...";
+                            string url = SRCUrl + "list.ini";
+                            string savePath = Path.Combine(Application.StartupPath, "list.ini");
+                            try
+                            {
+                                await DownloadFileAsync(url, savePath);
+                                uiTextBox1.Text += "\r\n列表获取成功！";
+                                IniFile listIni = new IniFile(savePath);
+                                foreach (string section in listIni.Sections)
+                                {
+                                    uiListBox1.Items.Add(listIni.ReadString(section, "name", ""));
+                                }
+                            }
+                            catch
+                            {
+                                uiTextBox1.Text += "\r\n列表获取失败！";
+                            }
                         }
                     }
                     else
@@ -174,7 +190,7 @@ namespace DawnWallpaper
 
         private void uiButton2_Click(object sender, EventArgs e)
         {
-            uiTextBox1.Text += "\r\n" + "正在打开文件...";
+            uiTextBox1.Text += "\r\n正在打开文件...";
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Title = "选择DawnWallpaper安装包";
             openFileDialog.Filter = "wallpaper package (*.w)|*.w|All files (*.*)|*.*";
@@ -182,14 +198,79 @@ namespace DawnWallpaper
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string filePath = openFileDialog.FileName;
-                uiTextBox1.Text += "\r\n" + "正在安装...";
+                uiTextBox1.Text += "\r\n正在安装...";
                 ZipFile.ExtractToDirectory(filePath, Path.Combine(Application.StartupPath, "assets"));
-                uiTextBox1.Text += "\r\n" + "安装完成！";
+                uiTextBox1.Text += "\r\n安装完成！";
             }
             else
             {
-                uiTextBox1.Text += "\r\n" + "取消选择";
+                uiTextBox1.Text += "\r\n取消选择";
             }
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ConfigEditForm();
+        }
+
+        private void ConfigEditForm()
+        {
+            configEdit = new UIEditForm();
+            configEdit.Text = "配置编辑";
+            configEdit.Size = new Size(600, 250);
+            configEdit.ButtonOkClick += ConfigEdit_ButtonOkClick;
+            configEdit.ButtonCancelClick += ConfigEdit_ButtonCancelClick;
+
+            UITextBox SRCName = new UITextBox();
+            SRCName.Name = "SRCName";
+            SRCName.Location = new Point(30, 60);
+            SRCName.Size = new Size(540, 30);
+            SRCName.Watermark = "订阅主题名称";
+
+            UITextBox SRCUrl = new UITextBox();
+            SRCUrl.Name = "SRCUrl";
+            SRCUrl.Location = new Point(30, 120);
+            SRCUrl.Size = new Size(540, 30);
+            SRCUrl.Watermark = "订阅URL";
+
+
+            if (File.Exists(Path.Combine(Application.StartupPath, "SRCConfig.ini")))
+            {
+                IniFile SRCConfig = new IniFile(Path.Combine(Application.StartupPath, "SRCConfig.ini"));
+                SRCName.Text = SRCConfig.ReadString("main", "SRCName", "");
+                SRCUrl.Text = SRCConfig.ReadString("main", "SRCUrl", "");
+            }
+
+            configEdit.Controls.Add(SRCName);
+            configEdit.Controls.Add(SRCUrl);
+
+            configEdit.ShowDialog();
+        }
+
+        private void ConfigEdit_ButtonOkClick(object? sender, EventArgs e)
+        {
+            if (configEdit == null) return;
+            string SRCName = configEdit.Controls["SRCName"].Text;
+            string SRCUrl = configEdit.Controls["SRCUrl"].Text;
+            if (SRCName == "" || SRCUrl == "")
+            {
+                UIMessageBox.Show("存在空项！");
+                configEdit.Close();
+                return;
+            }
+            IniFile SRCConfig = new IniFile(Path.Combine(Application.StartupPath, "SRCConfig.ini"));
+            SRCConfig.Write("main", "SRCName", SRCName);
+            SRCConfig.Write("main", "SRCUrl", SRCUrl);
+
+            uiTextBox1.Text += "\r\n已保存配置！";
+            configEdit.Close();
+            this.Close();
+        }
+        private void ConfigEdit_ButtonCancelClick(object? sender, EventArgs e)
+        {
+            if (configEdit == null) return;
+            uiTextBox1.Text += "\r\n取消保存配置";
+            configEdit.Close();
         }
     }
 }
