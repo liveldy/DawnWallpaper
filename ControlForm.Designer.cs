@@ -223,7 +223,7 @@ namespace DawnWallpaper
             // 
             toolStripMenuItem5.Name = "toolStripMenuItem5";
             toolStripMenuItem5.Size = new Size(200, 30);
-            toolStripMenuItem5.Text = "安装";
+            toolStripMenuItem5.Text = "订阅";
             toolStripMenuItem5.Click += toolStripMenuItem5_Click;
             // 
             // toolStripSeparator2
