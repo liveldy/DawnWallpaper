@@ -35,6 +35,9 @@ namespace DawnWallpaper
             uiButton2 = new Sunny.UI.UIButton();
             uiProcessBar1 = new Sunny.UI.UIProcessBar();
             uiLabel1 = new Sunny.UI.UILabel();
+            uiContextMenuStrip1 = new Sunny.UI.UIContextMenuStrip();
+            toolStripMenuItem1 = new ToolStripMenuItem();
+            uiContextMenuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // uiListBox1
@@ -114,6 +117,22 @@ namespace DawnWallpaper
             uiLabel1.TabIndex = 5;
             uiLabel1.TextAlign = ContentAlignment.MiddleCenter;
             // 
+            // uiContextMenuStrip1
+            // 
+            uiContextMenuStrip1.BackColor = Color.FromArgb(243, 249, 255);
+            uiContextMenuStrip1.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
+            uiContextMenuStrip1.ImageScalingSize = new Size(24, 24);
+            uiContextMenuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1 });
+            uiContextMenuStrip1.Name = "uiContextMenuStrip1";
+            uiContextMenuStrip1.Size = new Size(129, 34);
+            // 
+            // toolStripMenuItem1
+            // 
+            toolStripMenuItem1.Name = "toolStripMenuItem1";
+            toolStripMenuItem1.Size = new Size(128, 30);
+            toolStripMenuItem1.Text = "配置";
+            toolStripMenuItem1.Click += toolStripMenuItem1_Click;
+            // 
             // InstallForm
             // 
             AutoScaleMode = AutoScaleMode.None;
@@ -124,16 +143,19 @@ namespace DawnWallpaper
             Controls.Add(uiButton1);
             Controls.Add(uiTextBox1);
             Controls.Add(uiListBox1);
+            ExtendBox = true;
+            ExtendMenu = uiContextMenuStrip1;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MinimumSize = new Size(800, 600);
             Name = "InstallForm";
             Padding = new Padding(2, 36, 2, 2);
             Resizable = true;
             ShowDragStretch = true;
-            Text = "安装";
+            Text = "订阅";
             ZoomScaleRect = new Rectangle(22, 22, 800, 450);
             Load += Install_Load;
             SizeChanged += Install_SizeChanged;
+            uiContextMenuStrip1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -145,5 +167,7 @@ namespace DawnWallpaper
         private Sunny.UI.UIButton uiButton2;
         private Sunny.UI.UIProcessBar uiProcessBar1;
         private Sunny.UI.UILabel uiLabel1;
+        private Sunny.UI.UIContextMenuStrip uiContextMenuStrip1;
+        private ToolStripMenuItem toolStripMenuItem1;
     }
 }
