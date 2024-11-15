@@ -1,4 +1,4 @@
-﻿using DawnWallpaper.Properties;
+using DawnWallpaper.Properties;
 
 namespace DawnWallpaper
 {
@@ -37,7 +37,7 @@ namespace DawnWallpaper
             // 
             // axWindowsMediaPlayer1
             // 
-            axWindowsMediaPlayer1.Dock = DockStyle.Fill;
+            //axWindowsMediaPlayer1.Dock = DockStyle.Fill;
             axWindowsMediaPlayer1.Enabled = true;
             axWindowsMediaPlayer1.Location = new Point(0, 0);
             axWindowsMediaPlayer1.Margin = new Padding(6);
@@ -60,7 +60,6 @@ namespace DawnWallpaper
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterParent;
             Text = "DawnWallpaper";
-            WindowState = FormWindowState.Maximized;
             FormClosing += WallpaperForm_FormClosing;
             Load += WallpaperForm_Load;
             ((System.ComponentModel.ISupportInitialize)axWindowsMediaPlayer1).EndInit();
