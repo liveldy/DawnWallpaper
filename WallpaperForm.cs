@@ -35,12 +35,13 @@ namespace DawnWallpaper
             axWindowsMediaPlayer1.stretchToFit = true;
             axWindowsMediaPlayer1.settings.setMode("loop", true);
             axWindowsMediaPlayer1.settings.mute = !ControlForm.bgm;
-            if (ControlForm.sound) PlayNextAudio();
+            if (ControlForm.sound && Directory.Exists(Path.Combine(ControlForm.assetsDirectory, ControlForm.indexName, "audio"))) PlayNextAudio();
         }
 
 
         private void InitializePreviewForm()
         {
+            if (!Directory.Exists(Path.Combine(ControlForm.assetsDirectory, ControlForm.indexName, "audio"))) return;
             string folderPath = Path.Combine(ControlForm.assetsDirectory, ControlForm.indexName, "audio");
             audioFiles = Directory.GetFiles(folderPath, "*.wav").OrderBy(f => f).ToArray();
 
