@@ -64,7 +64,7 @@ namespace DawnWallpaper
                             IniFile SRCConfig = new IniFile(Path.Combine(Application.StartupPath, "SRCConfig.ini"));
                             string SRCName = SRCConfig.ReadString("main", "SRCName", "");
                             string SRCUrl = SRCConfig.ReadString("main", "SRCUrl", "");
-                            uiTextBox1.Text += "\r\n读取完成！";
+                            uiTextBox1.Text += "\r\n订阅配置读取完成！";
                             uiTextBox1.Text += "\r\n订阅主题名称：" + SRCName;
                             uiTextBox1.Text += "\r\n订阅URL：" + SRCUrl;
                             uiTextBox1.Text += "\r\n获取下载列表...";
@@ -73,12 +73,12 @@ namespace DawnWallpaper
                             try
                             {
                                 await DownloadFileAsync(url, savePath);
-                                uiTextBox1.Text += "\r\n列表获取成功！";
                                 IniFile listIni = new IniFile(savePath);
                                 foreach (string section in listIni.Sections)
                                 {
                                     uiListBox1.Items.Add(listIni.ReadString(section, "name", ""));
                                 }
+                                uiTextBox1.Text += "\r\n列表获取成功！";
                             }
                             catch
                             {
@@ -147,6 +147,7 @@ namespace DawnWallpaper
             uiProcessBar1.Value = 0;
             uiButton1.Enabled = true;
         }
+
         private void InitializeUI()
         {
             uiListBox1.Location = new Point(20, 50);
