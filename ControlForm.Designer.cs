@@ -1,4 +1,4 @@
-namespace DawnWallpaper
+﻿namespace DawnWallpaper
 {
     partial class ControlForm
     {

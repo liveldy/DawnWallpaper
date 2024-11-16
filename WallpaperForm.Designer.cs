@@ -1,4 +1,4 @@
-using DawnWallpaper.Properties;
+﻿using DawnWallpaper.Properties;
 
 namespace DawnWallpaper
 {

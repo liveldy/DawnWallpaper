@@ -1,4 +1,4 @@
-using static System.Net.Mime.MediaTypeNames;
+﻿using static System.Net.Mime.MediaTypeNames;
 using System.Xml.Linq;
 
 namespace DawnWallpaper

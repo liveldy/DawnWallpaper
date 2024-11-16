@@ -13,18 +13,18 @@ namespace DawnWallpaper
 {
     public partial class ControlForm : UIForm
     {
-        //èµ„æºç›®å½•
+        //×ÊÔ´Ä¿Â¼
         public static string assetsDirectory = Path.Combine(Application.StartupPath, "assets");
-        //å½“å‰é€‰ä¸­å£çº¸ç´¢å¼•
+        //µ±Ç°Ñ¡ÖĞ±ÚÖ½Ë÷Òı
         public static string indexName = "";
         public static string indexNameVideo = "";
-        //æ­£åœ¨ä½¿ç”¨å£çº¸ç´¢å¼•
+        //ÕıÔÚÊ¹ÓÃ±ÚÖ½Ë÷Òı
         private string nowPlaying = "";
         private string nowPlayingVideo = "";
-        //æ˜¯å¦æ’­æ”¾è¯­éŸ³ã€èƒŒæ™¯éŸ³ä¹
+        //ÊÇ·ñ²¥·ÅÓïÒô¡¢±³¾°ÒôÀÖ
         public static bool sound = true;
         public static bool bgm = true;
-        //å£çº¸çª—å£
+        //±ÚÖ½´°¿Ú
         private IntPtr windowsHandle = IntPtr.Zero;
         private WallpaperForm? wallpaperform;
         private AxWindowsMediaPlayer? wallpaperplayer;
@@ -35,10 +35,10 @@ namespace DawnWallpaper
             InitializeBoot();
         }
 
-        //UIæ›´æ–°å‡½æ•°ï¼šåˆå§‹åŒ–çª—å£ã€è°ƒæ•´çª—å£å¤§å°æ—¶è°ƒç”¨
+        //UI¸üĞÂº¯Êı£º³õÊ¼»¯´°¿Ú¡¢µ÷Õû´°¿Ú´óĞ¡Ê±µ÷ÓÃ
         private void InitialzeUI()
         {
-            Font font = new Font("å®‹ä½“", this.Height / 70);
+            Font font = new Font("ËÎÌå", this.Height / 70);
             uiLabel1.Font = font;
             uiCheckBox1.Font = font;
             uiCheckBox2.Font = font;
@@ -68,7 +68,7 @@ namespace DawnWallpaper
             InitializeData();
         }
 
-        //ä¿¡æ¯æ›´æ–°å‡½æ•°ï¼šé€‰ä¸­å£çº¸æ—¶æ›´æ–°å³ä¾§ä¿¡æ¯å’Œå½“å‰é€‰ä¸­å£çº¸ç´¢å¼•
+        //ĞÅÏ¢¸üĞÂº¯Êı£ºÑ¡ÖĞ±ÚÖ½Ê±¸üĞÂÓÒ²àĞÅÏ¢ºÍµ±Ç°Ñ¡ÖĞ±ÚÖ½Ë÷Òı
         private void InitializeDescription()
         {
             IniFile configini = new IniFile(Path.Combine(assetsDirectory, indexName, "config.ini"));
@@ -90,11 +90,11 @@ namespace DawnWallpaper
                     else uiComboBox1.SelectedIndex = 0;
                 }
             }
-            if (indexName == nowPlaying) uiButton1.Text = "æ­£åœ¨åº”ç”¨";
-            else uiButton1.Text = "åº”ç”¨";
+            if (indexName == nowPlaying) uiButton1.Text = "ÕıÔÚÓ¦ÓÃ";
+            else uiButton1.Text = "Ó¦ÓÃ";
         }
 
-        //æ•°æ®æ›´æ–°å‡½æ•°ï¼šæ›´æ–°å£çº¸åˆ—è¡¨ï¼Œåœ¨åˆå§‹åŒ–çª—å£ã€é‡æ–°æ¿€æ´»çª—å£æ—¶è°ƒç”¨
+        //Êı¾İ¸üĞÂº¯Êı£º¸üĞÂ±ÚÖ½ÁĞ±í£¬ÔÚ³õÊ¼»¯´°¿Ú¡¢ÖØĞÂ¼¤»î´°¿ÚÊ±µ÷ÓÃ
         private void InitializeData()
         {
             uiFlowLayoutPanel1.Clear();
@@ -138,7 +138,7 @@ namespace DawnWallpaper
             }
         }
 
-        //å¯åŠ¨é¦–ä½å¤„ç†å‡½æ•°ï¼šå¯åŠ¨ç¨‹åºæ—¶å…ˆè¿è¡Œçš„åˆå§‹åŒ–å‡½æ•°
+        //Æô¶¯Ê×Î»´¦Àíº¯Êı£ºÆô¶¯³ÌĞòÊ±ÏÈÔËĞĞµÄ³õÊ¼»¯º¯Êı
         private void InitializeBoot()
         {
             if (!Directory.Exists(assetsDirectory)) Directory.CreateDirectory(assetsDirectory);
@@ -151,18 +151,18 @@ namespace DawnWallpaper
             uiComboBox1.SelectedIndex = 0;
         }
 
-        /*****å£çº¸åŠ è½½å‡½æ•°*****/
+        /*****±ÚÖ½¼ÓÔØº¯Êı*****/
 
-        //æ ¸å¿ƒå‡½æ•°
+        //ºËĞÄº¯Êı
         private void wallpaperLoad()
         {
             wallpaperExitNormal();
             wallpaperLoadNormal();
             nowPlaying = indexName;
-            uiButton1.Text = "æ­£åœ¨åº”ç”¨";
+            uiButton1.Text = "ÕıÔÚÓ¦ÓÃ";
         }
 
-        //å£çº¸åŠ è½½å‡½æ•°
+        //±ÚÖ½¼ÓÔØº¯Êı
         private void wallpaperLoadNormal()
         {
             if (!File.Exists(Path.Combine(assetsDirectory, indexName, "videos", uiComboBox1.SelectedText))) return;
@@ -179,7 +179,7 @@ namespace DawnWallpaper
 
             this.wallpaperform.TextChangedEvent += updateAudio;
         }
-        //å£çº¸é€€å‡ºå‡½æ•°
+        //±ÚÖ½ÍË³öº¯Êı
         private void wallpaperExitNormal()
         {
             if (windowsHandle != IntPtr.Zero)
@@ -192,7 +192,7 @@ namespace DawnWallpaper
             }
         }
 
-        //å®½é«˜è°ƒæ•´å‡½æ•°
+        //¿í¸ßµ÷Õûº¯Êı
         private void wallpaperCorrect(AxWindowsMediaPlayer player)
         {
             float screenAspectRatio = (float)Screen.PrimaryScreen.Bounds.Width / Screen.PrimaryScreen.Bounds.Height;
@@ -209,13 +209,13 @@ namespace DawnWallpaper
                 player.Width = newWidth;
             }
         }
-        //æ›´æ–°éŸ³é¢‘è¿›åº¦å§”æ‰˜å‡½æ•°
+        //¸üĞÂÒôÆµ½ø¶ÈÎ¯ÍĞº¯Êı
         private void updateAudio(string text)
         {
-            notifyIcon1.Text = "ç ´æ™“å£çº¸" + text;
+            notifyIcon1.Text = "ÆÆÏş±ÚÖ½" + text;
 
-            if (indexName == nowPlaying) uiButton1.Text = "æ­£åœ¨åº”ç”¨" + text;
-            else uiButton1.Text = "åº”ç”¨";
+            if (indexName == nowPlaying) uiButton1.Text = "ÕıÔÚÓ¦ÓÃ" + text;
+            else uiButton1.Text = "Ó¦ÓÃ";
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -278,24 +278,24 @@ namespace DawnWallpaper
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
-            UIMessageBox.Show(@"ç ´æ™“å£çº¸
-ä½œè€…ï¼šå“€æ­Œæ®‡å¹´
+            UIMessageBox.Show(@"ÆÆÏş±ÚÖ½
+×÷Õß£º°§¸èéäÄê
 Github:https://github.com/liveldy
 
-ç‰ˆæœ¬ï¼šV1.0.4.0
-æ›´æ–°å…¬å‘Šï¼š
-1.ç¨‹åºåŠ è½½å‰è¿›è¡Œåˆå§‹åŒ–å’Œæ–‡ä»¶æ£€æŸ¥
-2.å£çº¸åˆ—è¡¨åˆ†ç±»ï¼šæŒ‰è®¢é˜…ä¸»é¢˜åç§°-å£çº¸æ ‡ç­¾
-3.ç»†èŠ‚ä¼˜åŒ–å’Œæ”¹è¿›
+°æ±¾£ºV1.0.4.0
+¸üĞÂ¹«¸æ£º
+1.³ÌĞò¼ÓÔØÇ°½øĞĞ³õÊ¼»¯ºÍÎÄ¼ş¼ì²é
+2.±ÚÖ½ÁĞ±í·ÖÀà£º°´¶©ÔÄÖ÷ÌâÃû³Æ-±ÚÖ½±êÇ©
+3.Ï¸½ÚÓÅ»¯ºÍ¸Ä½ø
 
-QQï¼š2690034441
-            ", "å…³äº");
+QQ£º2690034441
+            ", "¹ØÓÚ");
         }
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
             string startupFolder = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
-            string shortcutPath = Path.Combine(startupFolder, "ç ´æ™“å£çº¸.lnk");
+            string shortcutPath = Path.Combine(startupFolder, "ÆÆÏş±ÚÖ½.lnk");
         }
 
         private void uiButton3_Click(object sender, EventArgs e)
