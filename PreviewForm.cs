@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -43,7 +43,7 @@ namespace DawnWallpaper
             this.WindowState = FormWindowState.Maximized;
             axWindowsMediaPlayer1.Dock = DockStyle.Fill;
             axWindowsMediaPlayer1.uiMode = "none";
-            axWindowsMediaPlayer1.URL = Path.Combine(ControlForm.assetsDirectory, ControlForm.indexName, "video.mp4");
+            axWindowsMediaPlayer1.URL = Path.Combine(ControlForm.assetsDirectory, ControlForm.indexName, "videos", ControlForm.indexNameVideo);
             axWindowsMediaPlayer1.stretchToFit = true;
             axWindowsMediaPlayer1.settings.setMode("loop", true);
             axWindowsMediaPlayer1.settings.mute = !ControlForm.bgm;
