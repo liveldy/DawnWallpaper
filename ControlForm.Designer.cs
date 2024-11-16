@@ -109,6 +109,7 @@ namespace DawnWallpaper
             uiComboBox1.TabIndex = 7;
             uiComboBox1.TextAlignment = ContentAlignment.MiddleCenter;
             uiComboBox1.Watermark = "";
+            uiComboBox1.SelectedIndexChanged += uiComboBox1_SelectedIndexChanged;
             // 
             // uiButton3
             // 
@@ -174,9 +175,9 @@ namespace DawnWallpaper
             // 
             uiLabel1.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
             uiLabel1.ForeColor = Color.FromArgb(48, 48, 48);
-            uiLabel1.Location = new Point(50, 346);
+            uiLabel1.Location = new Point(19, 346);
             uiLabel1.Name = "uiLabel1";
-            uiLabel1.Size = new Size(290, 100);
+            uiLabel1.Size = new Size(342, 100);
             uiLabel1.TabIndex = 1;
             uiLabel1.Text = "名称\r\n版本\r\n作者\r\n大小";
             uiLabel1.TextAlign = ContentAlignment.MiddleCenter;
