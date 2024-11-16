@@ -7,6 +7,7 @@ using Sunny.UI;
 using AxWMPLib;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using System.IO;
 
 namespace DawnWallpaper
 {
@@ -19,6 +20,7 @@ namespace DawnWallpaper
         public static string indexNameVideo = "";
         //正在使用壁纸索引
         private string nowPlaying = "";
+        private string nowPlayingVideo = "";
         //是否播放语音、背景音乐
         public static bool sound = true;
         public static bool bgm = true;
@@ -26,7 +28,6 @@ namespace DawnWallpaper
         private IntPtr windowsHandle = IntPtr.Zero;
         private WallpaperForm? wallpaperform;
         private AxWindowsMediaPlayer? wallpaperplayer;
-
 
         public ControlForm()
         {
@@ -85,15 +86,10 @@ namespace DawnWallpaper
                 foreach (FileInfo subFile in srcPath.GetFiles())
                 {
                     uiComboBox1.Items.Add(Path.GetFileName(subFile.Name));
-                    if (indexNameVideo != "") uiComboBox1.SelectedItem = indexNameVideo;
+                    if (nowPlayingVideo != "") uiComboBox1.SelectedItem = nowPlayingVideo;
+                    else uiComboBox1.SelectedIndex = 0;
                 }
             }
-            else
-            {
-                uiComboBox1.Items.Add("主壁纸");
-                uiComboBox1.SelectedItem = "主壁纸";
-            }
-
             if (indexName == nowPlaying) uiButton1.Text = "正在应用";
             else uiButton1.Text = "应用";
         }
@@ -103,16 +99,42 @@ namespace DawnWallpaper
         {
             uiFlowLayoutPanel1.Clear();
             DirectoryInfo srcPath = new DirectoryInfo(assetsDirectory);
+            if (srcPath.GetDirectories().Length == 0) return;
+            List<string> types = new List<string>();
             foreach (DirectoryInfo subDirectory in srcPath.GetDirectories())
             {
-                PictureBox header = new PictureBox();
-                header.Height = uiFlowLayoutPanel1.Width / 5 - 7;
-                header.Width = uiFlowLayoutPanel1.Width / 5 - 7;
-                header.SizeMode = PictureBoxSizeMode.StretchImage;
-                header.Name = Path.GetFileName(subDirectory.Name);
-                header.ImageLocation = Path.Combine(subDirectory.FullName, "header.png");
-                header.Click += Header_Click;
-                uiFlowLayoutPanel1.Add(header);
+                int count = 0;
+                IniFile iniPackage = new IniFile(Path.Combine(subDirectory.FullName, "config.ini"));
+                if (types.Count == 0) types.Add(iniPackage.ReadString("main", "type", ""));
+                foreach (string type in types.ToArray())
+                {
+                    if (iniPackage.ReadString("main", "type", "") == type) break;
+                    if (types.Count - 1 == count) types.Add(iniPackage.ReadString("main", "type", ""));
+                    count++;
+                }
+            }
+            for (int i = 0; i < types.Count; i++)
+            {
+                UILine typetax = new UILine();
+                typetax.Text = types.ToArray()[i];
+                typetax.Size = new Size(uiFlowLayoutPanel1.Width - 10, typetax.Height);
+                uiFlowLayoutPanel1.Add(typetax);
+                foreach (DirectoryInfo subDirectory in srcPath.GetDirectories())
+                {
+                    IniFile iniPackage = new IniFile(Path.Combine(subDirectory.FullName, "config.ini"));
+                    if (types.ToArray()[i] == iniPackage.ReadString("main", "type", ""))
+                    {
+                        PictureBox header = new PictureBox();
+                        header.Height = uiFlowLayoutPanel1.Width / 5 - 7;
+                        header.Width = uiFlowLayoutPanel1.Width / 5 - 7;
+                        header.SizeMode = PictureBoxSizeMode.StretchImage;
+                        header.Name = Path.GetFileName(subDirectory.Name);
+                        header.ImageLocation = Path.Combine(subDirectory.FullName, "header.png");
+                        header.InitialImage = this.IconImage;
+                        header.Click += Header_Click;
+                        uiFlowLayoutPanel1.Add(header);
+                    }
+                }
             }
         }
 
@@ -120,6 +142,11 @@ namespace DawnWallpaper
         private void InitializeBoot()
         {
             if (!Directory.Exists(assetsDirectory)) Directory.CreateDirectory(assetsDirectory);
+            DirectoryInfo srcPath = new DirectoryInfo(assetsDirectory);
+            foreach (FileInfo subFile in srcPath.GetFiles())
+            {
+                File.Delete(subFile.FullName);
+            }
             Wallpaper.GETHandleRun(this);
             uiComboBox1.SelectedIndex = 0;
         }
@@ -138,22 +165,13 @@ namespace DawnWallpaper
         //壁纸加载函数
         private void wallpaperLoadNormal()
         {
-            if (
-                (
-                !File.Exists(Path.Combine(assetsDirectory, indexName, "video.mp4"))
-                && !File.Exists(Path.Combine(assetsDirectory, indexName, "videos", uiComboBox1.SelectedText))
-                )
-                || uiComboBox1.SelectedText == ""
-               ) return;
+            if (!File.Exists(Path.Combine(assetsDirectory, indexName, "videos", uiComboBox1.SelectedText))) return;
             sound = uiCheckBox1.Checked;
             bgm = uiCheckBox2.Checked;
             wallpaperform = new WallpaperForm();
             wallpaperplayer = wallpaperform.axWindowsMediaPlayer1;
-            if (uiComboBox1.SelectedText != "" && uiComboBox1.SelectedText != "主壁纸")
-                wallpaperplayer.URL = Path.Combine(assetsDirectory, indexName, "videos", uiComboBox1.SelectedText);
-            else
-                wallpaperplayer.URL = Path.Combine(assetsDirectory, indexName, "video.mp4");
-            wallpaperform.Size = new Size(Screen.PrimaryScreen.Bounds.Width + 1000, Screen.PrimaryScreen.Bounds.Height + 1000);
+            wallpaperplayer.URL = Path.Combine(assetsDirectory, indexName, "videos", uiComboBox1.SelectedText);
+            wallpaperform.Size = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
             wallpaperCorrect(wallpaperplayer);
             Wallpaper.SetFather(wallpaperform);
             wallpaperform.Show();
@@ -166,8 +184,10 @@ namespace DawnWallpaper
         {
             if (windowsHandle != IntPtr.Zero)
             {
+#pragma warning disable CS8600
                 Form wallpaperWindows = (Form)Control.FromHandle(windowsHandle);
-                wallpaperWindows.Close();
+#pragma warning restore CS8600
+                if (wallpaperWindows != null) wallpaperWindows.Close();
                 Wallpaper.Refresh();
             }
         }
@@ -260,15 +280,15 @@ namespace DawnWallpaper
         {
             UIMessageBox.Show(@"破晓壁纸
 作者：哀歌殇年
+Github:https://github.com/liveldy
 
-版本：V1.0.3.0
+版本：V1.0.4.0
 更新公告：
-1.新增订阅主题，可以配置不同的订阅项目
-2.实现壁纸包多壁纸
-3.更换logo
+1.程序加载前进行初始化和文件检查
+2.壁纸列表分类：按订阅主题名称-壁纸标签
+3.细节优化和改进
 
 QQ：2690034441
-本软件完全免费，严禁用于商用
             ", "关于");
         }
 
@@ -280,7 +300,7 @@ QQ：2690034441
 
         private void uiButton3_Click(object sender, EventArgs e)
         {
-            if (!File.Exists(Path.Combine(assetsDirectory, indexName, "video.mp4"))) return;
+            if (!File.Exists(Path.Combine(assetsDirectory, indexName, "videos", uiComboBox1.SelectedText))) return;
             sound = uiCheckBox1.Checked;
             bgm = uiCheckBox2.Checked;
             Form preview = new PreviewForm();
@@ -298,5 +318,9 @@ QQ：2690034441
             InitializeData();
         }
 
+        private void uiComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            indexNameVideo = uiComboBox1.SelectedText;
+        }
     }
 }
