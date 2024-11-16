@@ -1,4 +1,4 @@
-﻿using static System.Net.Mime.MediaTypeNames;
+using static System.Net.Mime.MediaTypeNames;
 using System.Xml.Linq;
 
 namespace DawnWallpaper
@@ -45,14 +45,14 @@ namespace DawnWallpaper
             axWindowsMediaPlayer1.Size = new Size(498, 197);
             axWindowsMediaPlayer1.TabIndex = 0;
             // 
-            // Preview
+            // PreviewForm
             // 
             AutoScaleMode = AutoScaleMode.None;
             ClientSize = new Size(939, 551);
             Controls.Add(axWindowsMediaPlayer1);
             Icon = (Icon)resources.GetObject("$this.Icon");
             MinimumSize = new Size(640, 360);
-            Name = "Preview";
+            Name = "PreviewForm";
             Padding = new Padding(2, 36, 2, 2);
             Resizable = true;
             ShowDragStretch = true;
