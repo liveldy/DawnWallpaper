@@ -184,6 +184,7 @@
             // 
             // pictureBox1
             // 
+            pictureBox1.ErrorImage = (Image)resources.GetObject("pictureBox1.ErrorImage");
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
             pictureBox1.Location = new Point(88, 90);
             pictureBox1.Name = "pictureBox1";

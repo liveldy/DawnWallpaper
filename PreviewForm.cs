@@ -28,6 +28,7 @@ namespace DawnWallpaper
 
         private void InitializePreviewForm()
         {
+            if (!Directory.Exists(Path.Combine(ControlForm.assetsDirectory, ControlForm.indexName, "audio"))) return;
             string folderPath = Path.Combine(ControlForm.assetsDirectory, ControlForm.indexName, "audio");
             audioFiles = Directory.GetFiles(folderPath, "*.wav").OrderBy(f => f).ToArray();
 
@@ -74,7 +75,7 @@ namespace DawnWallpaper
         private void PreviewW_Load(object sender, EventArgs e)
         {
             InitializeMediaPlayer();
-            if (ControlForm.sound) PlayNextAudio();
+            if (ControlForm.sound && Directory.Exists(Path.Combine(ControlForm.assetsDirectory, ControlForm.indexName, "audio"))) PlayNextAudio();
         }
 
         private void PreviewW_FormClosing(object sender, FormClosingEventArgs e)

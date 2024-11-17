@@ -18,6 +18,7 @@ namespace DawnWallpaper
         //当前选中壁纸索引
         public static string indexName = "";
         public static string indexNameVideo = "";
+        private List<string> indexNameList = new List<string>();
         //正在使用壁纸索引
         private string nowPlaying = "";
         private string nowPlayingVideo = "";
@@ -148,6 +149,16 @@ namespace DawnWallpaper
                 File.Delete(subFile.FullName);
             }
             Wallpaper.GETHandleRun(this);
+
+            HotKey.KeySet(this.Handle);
+            if (srcPath.GetDirectories().Length != 0)
+            {
+                foreach (DirectoryInfo subDirectory in srcPath.GetDirectories())
+                {
+                    IniFile iniPackage = new IniFile(Path.Combine(subDirectory.FullName, "config.ini"));
+                    indexNameList.Add(Path.GetFileName(subDirectory.Name));
+                }
+            }
             uiComboBox1.SelectedIndex = 0;
         }
 
@@ -209,6 +220,24 @@ namespace DawnWallpaper
                 player.Width = newWidth;
             }
         }
+
+        private void AutoBootIniSet()
+        {
+            IniFile autoboot = new IniFile(Path.Combine(Application.StartupPath, "boot.ini"));
+            autoboot.Write("main", "indexName", indexName);
+            autoboot.Write("main", "indexNameVideo", indexNameVideo);
+        }
+        private void AutoBootIniGet()
+        {
+            if (File.Exists(Path.Combine(Application.StartupPath, "boot.ini")))
+            {
+                IniFile autoboot = new IniFile(Path.Combine(Application.StartupPath, "boot.ini"));
+                indexName = autoboot.ReadString("main", "indexName", "");
+                indexNameVideo = autoboot.ReadString("main", "indexNameVideo", "");
+                wallpaperLoad();
+            }
+        }
+
         //更新音频进度委托函数
         private void updateAudio(string text)
         {
@@ -222,6 +251,58 @@ namespace DawnWallpaper
         {
             e.Cancel = true;
             this.Hide();
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            UINotifier.CloseAll();
+            const int WM_HOTKEY = 0x0312;
+            if (indexName == "")
+            {
+                AutoBootIniGet();
+                base.WndProc(ref m);
+            }
+            InitializeDescription();
+            uiComboBox1.SelectedIndex = 0;
+            indexNameVideo = uiComboBox1.SelectedText;
+            if (m.Msg == WM_HOTKEY)
+            {
+                if (indexNameList.Count == 0)
+                {
+                    UINotifier.Show("无壁纸", UINotifierType.ERROR, "错误");
+                    base.WndProc(ref m);
+                }
+                if (indexNameList.IndexOf(indexName) == -1)
+                {
+                    UINotifier.Show("壁纸索引错误", UINotifierType.ERROR, "错误");
+                    base.WndProc(ref m);
+                }
+                switch (m.WParam.ToInt32())
+                {
+                    case HotKey.HOTKEY_ID_LEFT:
+                        if (indexNameList.IndexOf(indexName) == 0)
+                        {
+                            UINotifier.Show("已经是第一张壁纸", UINotifierType.INFO, "提示");
+                            break;
+                        }
+                        indexName = indexNameList.ToArray()[indexNameList.IndexOf(indexName) - 1];
+                        wallpaperLoad();
+                        UINotifier.Show("已切换到上一张壁纸", UINotifierType.OK, "成功");
+                        break;
+                    case HotKey.HOTKEY_ID_RIGHT:
+                        if (indexNameList.IndexOf(indexName) == indexNameList.Count - 1) 
+                        {
+                            UINotifier.Show("已经是最后一张壁纸", UINotifierType.INFO, "提示");
+                            break;
+                        }
+                        indexName = indexNameList.ToArray()[indexNameList.IndexOf(indexName) + 1];
+                        wallpaperLoad();
+                        UINotifier.Show("已切换到下一张壁纸", UINotifierType.OK, "成功");
+                        break;
+                }
+            }
+
+            base.WndProc(ref m);
         }
 
         private void ControlForm_Load(object sender, EventArgs e)
@@ -273,6 +354,8 @@ namespace DawnWallpaper
         {
             notifyIcon1.Visible = false;
             wallpaperExitNormal();
+            HotKey.KeyOut(this.Handle);
+            AutoBootIniSet();
             Application.ExitThread();
         }
 
@@ -282,11 +365,12 @@ namespace DawnWallpaper
 作者：哀歌殇年
 Github:https://github.com/liveldy
 
-版本：V1.0.4.0
+版本：V1.0.5.0
 更新公告：
-1.程序加载前进行初始化和文件检查
-2.壁纸列表分类：按订阅主题名称-壁纸标签
-3.细节优化和改进
+1.切换壁纸快捷键并在右下方提示窗口
+2.新增壁纸删除功能
+3.新增屏保功能
+4.启动时自动播放上一次的壁纸
 
 QQ：2690034441
             ", "关于");
