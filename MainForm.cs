@@ -169,7 +169,7 @@ namespace DawnWallpaper
                     AssetsPath = wallpaperdir.FullName;
                     InitializeItem();
                     MainPictureBox.Image = this.IconImage;
-                    MainLabel.Text = "ĞÅÏ¢";
+                    MainLabel.Text = "ä¿¡æ¯";
                     videocombo = false;
                     MainComboBox.Clear();
                     videocombo = true;
@@ -179,7 +179,8 @@ namespace DawnWallpaper
 
         private void STAStripMenuItem_Click(object sender, EventArgs e)
         {
-            string dawnserverpath = Path.Combine(Directory.GetParent(Directory.GetParent(Application.StartupPath).FullName).FullName, "DawnServer.exe");
+            string dawnserverpath = Path.Combine(Directory.GetParent(Directory.GetParent(Directory.GetParent(Application.StartupPath).FullName).FullName).FullName, "DawnServer.exe");
+            UIMessageBox.Show(dawnserverpath);
             if (File.Exists(dawnserverpath))
             {
                 IniFile Info = new IniFile(Path.Combine(AssetsPath, "data.ini"));
@@ -187,19 +188,18 @@ namespace DawnWallpaper
             }
             else
             {
-                UIMessageBox.ShowInfo("µ±Ç°Ó¦ÓÃÃ»ÓĞSTA·şÎñ£¬ÈçĞè»ñÈ¡£¬ÇëÇ°Íùagsn.siteÏÂÔØÆÆÏşÓ¦ÓÃÖĞĞÄ");
+                UIMessageBox.ShowInfo("å½“å‰åº”ç”¨æ²¡æœ‰STAæœåŠ¡ï¼Œå¦‚éœ€è·å–ï¼Œè¯·å‰å¾€agsn.siteä¸‹è½½ç ´æ™“åº”ç”¨ä¸­å¿ƒ");
             }
         }
 
         private void AboutStripMenuItem_Click(object sender, EventArgs e)
         {
-            UIMessageBox.Show("DawnWallpaper ÆÆÏş±ÚÖ½ V1.1.0.0 20250216\n" +
-                "Copyright 2025 All Rights Reserved. °§¸èéäÄê °æÈ¨ËùÓĞ\n" +
-                "¹ÙÍø: https://agsn.site/\n" +
-                "×÷ÕßQQ£º2690034441\n" +
-                "¸üĞÂÄÚÈİ£º\n" +
-                "1.È«ĞÂ¹¹½¨£¬ÒÆ³ıÁË¶àÓàµÄ¹¦ÄÜ\n" +
-                "2.¿ªÊ¼Ö§³ÖSTA·şÎñ", "¹ØÓÚ");
+            UIMessageBox.Show("DawnWallpaper ç ´æ™“å£çº¸ V1.1.1.0 20250216\n" +
+                "Copyright 2025 All Rights Reserved. å“€æ­Œæ®‡å¹´ ç‰ˆæƒæ‰€æœ‰\n" +
+                "å®˜ç½‘: https://agsn.site/\n" +
+                "ä½œè€…QQï¼š2690034441\n" +
+                "æ›´æ–°å†…å®¹ï¼š\n" +
+                "ä¿®å¤äº†STAæœåŠ¡æŸ¥è¯¢é—®é¢˜", "å…³äº");
         }
     }
 }
