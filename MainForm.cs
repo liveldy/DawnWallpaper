@@ -180,7 +180,6 @@ namespace DawnWallpaper
         private void STAStripMenuItem_Click(object sender, EventArgs e)
         {
             string dawnserverpath = Path.Combine(Directory.GetParent(Directory.GetParent(Directory.GetParent(Application.StartupPath).FullName).FullName).FullName, "DawnServer.exe");
-            UIMessageBox.Show(dawnserverpath);
             if (File.Exists(dawnserverpath))
             {
                 IniFile Info = new IniFile(Path.Combine(AssetsPath, "data.ini"));
